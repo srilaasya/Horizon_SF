@@ -23,4 +23,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fetch orders on page load
     fetchOrders();
+
+    // New real-time listening functionality
+    const socket = io();
+    const startListeningBtn = document.getElementById('startListening');
+    const stopListeningBtn = document.getElementById('stopListening');
+    const realtimeTextDiv = document.getElementById('realtimeText');
+    const statusDiv = document.createElement('div');
+    document.body.appendChild(statusDiv);
+
+    startListeningBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/start_listening', { method: 'POST' });
+            const result = await response.json();
+            console.log(result.message);
+            statusDiv.textContent = "Listening...";
+            startListeningBtn.disabled = true;
+            stopListeningBtn.disabled = false;
+        } catch (error) {
+            console.error('Error starting listening:', error);
+            statusDiv.textContent = "Error starting listening";
+        }
+    });
+
+    stopListeningBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/stop_listening', { method: 'POST' });
+            const result = await response.json();
+            console.log(result.message);
+            statusDiv.textContent = "Stopped listening";
+            startListeningBtn.disabled = false;
+            stopListeningBtn.disabled = true;
+        } catch (error) {
+            console.error('Error stopping listening:', error);
+            statusDiv.textContent = "Error stopping listening";
+        }
+    });
+
+    socket.on('realtime_text', (data) => {
+        realtimeTextDiv.textContent += data.text;
+    });
+
+    // Initially disable the stop button
+    stopListeningBtn.disabled = true;
 });
+
