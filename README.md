@@ -22,13 +22,18 @@ Before you begin, ensure you have the following installed:
    cd your-repo-name
    ```
 
-2. **Create a virtual environment** (optional but recommended):
+2. **Ensure you are on the master branch**:
+   ```bash
+   git checkout master
+   ```
+
+3. **Create a virtual environment** (optional but recommended):
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
-3. **Install required packages**:
+4. **Install required packages**:
    ```bash
    pip install -r requirements.txt
    ```
@@ -38,19 +43,19 @@ Before you begin, ensure you have the following installed:
    pip install flask SpeechRecognition openai python-dotenv pyaudio
    ```
 
-4. **Set up environment variables**:
+5. **Set up environment variables**:
    Create a `.env` file in the root directory of your project and add your OpenAI API key:
    ```plaintext
    OPENAI_API_KEY=your_api_key_here
    ```
 
-5. **Run the application**:
+6. **Run the application**:
    Start the Flask server by running:
    ```bash
    python app.py
    ```
 
-6. **Access the application**:
+7. **Access the application**:
    Open your web browser and navigate to `http://127.0.0.1:5000` to access the application.
 
 ## Usage
