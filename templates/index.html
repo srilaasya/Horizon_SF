@@ -4,58 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Ality's Smart AR Glasses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        header {
+            background-color: #c8102e;
+            /* Red undertone */
+            color: white;
+            padding: 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 600;
+        }
+
+        h2 {
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: 300;
         }
 
         .container {
-            margin-top: 50px;
+            margin-top: 100px;
+            /* Space for fixed header */
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            transition: transform 0.3s;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        button {
+            background-color: #c8102e;
+            /* Red undertone */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #a60e24;
+            /* Darker red on hover */
+            transform: translateY(-2px);
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="text-center">Order Management</h1>
-        <form method="POST" class="mb-4">
-            <div class="form-group">
-                <label for="customer">Customer Name</label>
-                <input type="text" class="form-control" id="customer" name="customer" required>
-            </div>
-            <div class="form-group">
-                <label for="order">Order</label>
-                <input type="text" class="form-control" id="order" name="order" required>
-            </div>
-            <div class="form-group">
-                <label for="dietary_restrictions">Dietary Restrictions</label>
-                <input type="text" class="form-control" id="dietary_restrictions" name="dietary_restrictions">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Order</button>
-        </form>
+    <header>
+        <h1>Ality's Smart AR Glasses</h1>
+        <h2>Revolutionizing the AI chat interface, taking it beyond your usual screens.</h2>
+    </header>
 
-        <h2>Current Orders</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Customer</th>
-                    <th>Order</th>
-                    <th>Dietary Restrictions</th>
-                </tr>
-            </thead>
-            <tbody id="orders-table-body">
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order.customer }}</td>
-                    <td>{{ order.order }}</td>
-                    <td>{{ order.dietary_restrictions }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="container">
+        <button id="startRecording">Start Recording</button>
+        <button id="stopRecording" disabled>Stop Recording</button>
+        <div class="status" id="statusDiv"></div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#startRecording').click(function () {
+                $.post('/start_recording', function (data) {
+                    console.log(data.message);
+                    $('#startRecording').prop('disabled', true);
+                    $('#stopRecording').prop('disabled', false);
+                    $('#statusDiv').text("Recording...").css("color", "#c8102e");
+                });
+            });
+
+            $('#stopRecording').click(function () {
+                $.post('/stop_recording', function (data) {
+                    console.log(data.message);
+                    $('#startRecording').prop('disabled', false);
+                    $('#stopRecording').prop('disabled', true);
+                    $('#statusDiv').text("Recording stopped.").css("color", "#555");
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
